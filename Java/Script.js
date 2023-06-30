@@ -189,7 +189,7 @@ var places = [
 ];
 
 
-var map = L.map('map').setView([35.0116, 135.7681], 12);
+var map = L.map('map').setView([34.986042381255054,135.75877206426065], 18);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
