@@ -6,15 +6,8 @@ const cards = document.querySelectorAll(".card");
 cards.forEach(card => {
   card.addEventListener("click", () => {
     const placeName = card.getAttribute("data-name");
-    const mapUrl = `file:///C:/Users/y1810/OneDrive/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%88%E3%83%83%E3%83%97/%E6%83%85%E5%A0%B1%E5%9F%BA%E7%A4%8E%E5%AE%9F%E7%BF%92/HTML_%E8%AA%B2%E9%A1%8C/%E8%A6%B3%E5%85%89%E5%9C%B0%E3%83%9E%E3%83%83%E3%83%97.HTML??search=${encodeURIComponent(placeName)}`;
-    
-    // map.HTMLを開く
-    var mapWindow = window.open(mapUrl, "_blank");
-
-    // 一定時間待機してから名前を自動入力
-    setTimeout(() => {
-      mapWindow.document.getElementById("search-input").value = placeName;
-    }, 3000); // 1000ミリ秒（1秒）待機してから名前を入力
+    const mapUrl = `file:///C:/Users/y1810/OneDrive/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%88%E3%83%83%E3%83%97/%E6%83%85%E5%A0%B1%E5%9F%BA%E7%A4%8E%E5%AE%9F%E7%BF%92/HTML_%E8%AA%B2%E9%A1%8C/map.html??search=${encodeURIComponent(placeName)}`;
+    window.location.href = mapUrl; // クリックしたら別のページに移動
   });
 });
 
@@ -189,21 +182,21 @@ var places = [
 ];
 
 
-var map = L.map('map').setView([34.986042381255054,135.75877206426065], 18);
+var map = L.map('map').setView([34.986042381255054,135.75877206426065], 15);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+  attribution: 'image/Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
   maxZoom: 18,
 }).addTo(map);
 
 var attractionIcon = L.icon({
-  iconUrl: 'attraction-icon.png',
+  iconUrl: 'image/kankou_asia_family.jpg',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
 });
 
 var restaurantIcon = L.icon({
-  iconUrl: 'restaurant-icon.png',
+  iconUrl: 'image/building_food_family_restaurant.jpg',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
 });
@@ -278,6 +271,36 @@ searchInput.addEventListener('input', function() {
 
 
 
+
+// Function to toggle the popup for the selected place
+function togglePlace(placeName) {
+  // Find the place in the 'places' array based on the name
+  const place = places.find(place => place.name === placeName);
+
+  // Create the HTML content for the popup
+  const popupContent = `
+    <h3>${place.name}</h3>
+    <img src="${place.photo}" alt="${place.name}" width="200">
+    <p>${place.description}</p>
+  `;
+
+  // Remove existing popups and close any open popups
+  map.closePopup();
+  markers.forEach(marker => marker.unbindPopup());
+
+  // Create a new marker with the given place data
+  const markerOptions = {
+    icon: place.type === 'attraction' ? attractionIcon : restaurantIcon,
+  };
+  const marker = L.marker([place.lat, place.lng], markerOptions).addTo(map);
+  marker.bindPopup(popupContent);
+
+  // Open the popup immediately after creating the marker
+  marker.openPopup();
+
+  // Set the selected place as the center of the map, slightly down from the center
+  map.setView([place.lat + 0.0025, place.lng], 15); // 中心から少し下にずらす
+}
 
 
 
